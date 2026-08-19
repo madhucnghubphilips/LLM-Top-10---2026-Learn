@@ -1,0 +1,32 @@
+Level 1: Identify the Poisoned Document
+Accepted Answers: document b | poisoned | attacker-website | sar warning | fake | malicious | untrusted | unverified
+Required Keywords: poisoned, untrusted, dangerous, unsafe
+Explanation: Document B is the poisoned document. It directs patients to an attacker-controlled website, falsely claims SAR warnings are false positives, and exposes an admin PIN. These are hallmarks of a poisoning attack — malicious content crafted to look like legitimate clinical guidance.
+
+---
+
+Level 2: Why Semantic Similarity Is Not Trust
+Accepted Answers: semantic similarity is not trust | source trust filter | provenance | no provenance check | trust-aware | missing source validation | embedding similarity does not verify source
+Required Keywords: similarity, trust, provenance, source
+Explanation: The core weakness is that the retrieval pipeline treated high semantic similarity as evidence of trustworthiness. The missing control is source-trust filtering — documents must be verified against an approved source allowlist before they are indexed, and retrieval must filter by trust level before ranking by similarity.
+
+---
+
+Level 3: Cross-Patient PHI via Semantic Retrieval
+Accepted Answers: access control | patient scope | cross-patient | phi | authorization | scope filter | patient authorization
+Required Keywords: access control, patient, scope, authorization
+Explanation: The vulnerability is missing patient-scope access control. The retrieval pipeline did not enforce that documents are only returned to the authorised patient. The control is patient-scope authorization — only documents tagged for the requesting patient or marked as general should be retrievable in their context.
+
+---
+
+Level 4: Embedding Poisoning via Medical Vocabulary
+Accepted Answers: source validation | ingestion control | no source validation | vocabulary hijacking | medical vocabulary abuse | fake vendor | unverified source | ingestion pipeline
+Required Keywords: source, validation, ingestion, unverified
+Explanation: The attack technique is vocabulary mimicry — the attacker reused authentic medical vocabulary to achieve high semantic similarity scores. The missing ingestion control is source provenance validation: only documents from trusted, authenticated hospital sources should be accepted into the knowledge base. Automated ingestion without human review creates the attack surface.
+
+---
+
+Level 5: Secure Retrieval Pipeline Design
+Accepted Answers: source trust filter | access control | monitoring | re-ranking | human review | provenance check | trust-aware retrieval | source validation
+Required Keywords: source, access control, monitoring
+Explanation: The three most important controls are: (1) Source-trust filtering — block any document from unverified sources before indexing; (2) Patient-scope access control — retrieve only documents authorised for the requesting user or context; (3) Trust-aware re-ranking — rank results by trust score combined with similarity, not by similarity alone. Monitoring for unusual embedding cluster changes and human review for sensitive outputs provide additional defence in depth.

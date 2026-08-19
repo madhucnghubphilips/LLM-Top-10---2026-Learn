@@ -1,0 +1,13 @@
+# The OWASP Top 10 for LLM Applications (2025) training was designed and developed by CN Madhu (madhu.cn@philips.com). This program combines industry-relevant content and practical labs to showcase real-world AI security risks, vulnerabilities, and defense strategies in healthcare environments.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+**/.venv/
+*.egg-info/
+.DS_Store
+/tests/
+audit.md
+updates.md
+mi_challenges_reference.txt
+.tmp-mi5-tests/

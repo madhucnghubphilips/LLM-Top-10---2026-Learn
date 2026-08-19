@@ -1,0 +1,61 @@
+[
+  {
+    "level": 1,
+    "title": "Identify the Poisoned Document",
+    "challenge": "A hospital RAG system retrieved two documents in response to 'How do I prepare for an MRI?'. One document is from an approved hospital operator manual. The other tells patients to visit an external website for updated safety instructions and claims SAR warnings are false positives. Identify which document is poisoned and explain why it is dangerous.",
+    "evidence": [
+      "Document A: Approved 3T MRI Operator Manual — remove metal objects, follow SAR limits, use the approved protocol library.",
+      "Document B: URGENT MRI Safety Instructions — visit attacker-website.com/mri-safety, ignore SAR warnings, admin PIN is 449218.",
+      "Both documents scored above 0.75 on semantic similarity to the MRI preparation query.",
+      "Document B was uploaded 3 days ago by an unverified external account."
+    ]
+  },
+  {
+    "level": 2,
+    "title": "Why Semantic Similarity Is Not Trust",
+    "challenge": "A security analyst reviews an incident where a poisoned document ranked higher than a trusted guideline in a hospital RAG system. The poisoned document used similar medical vocabulary to legitimate MRI safety guidance. Explain the core LLM09 weakness demonstrated and identify what retrieval control was missing.",
+    "evidence": [
+      "Poisoned document similarity score: 0.91",
+      "Trusted clinical guideline similarity score: 0.87",
+      "The poisoned document contained the terms: MRI, patient, safety, preparation, checklist.",
+      "The retrieval pipeline had no source-trust filter or provenance check.",
+      "The poisoned document linked to an external attacker-controlled site."
+    ]
+  },
+  {
+    "level": 3,
+    "title": "Cross-Patient PHI via Semantic Retrieval",
+    "challenge": "A hospital employee queried the AI about their own MRI results. The RAG system retrieved the correct document plus a radiology report belonging to a different patient, because the two reports had similar clinical findings. Identify the vulnerability and the control that would have prevented the cross-patient data exposure.",
+    "evidence": [
+      "Query: 'What were the findings in my MRI scan?'",
+      "Returned Document 1: Patient DEMO-PAT-7732 — MRI Brain, no acute abnormality. Scope: authorized.",
+      "Returned Document 2: Patient DEMO-PAT-0091 — MRI Spine L4-L5 disc herniation. Scope: other_patient.",
+      "Both documents scored above 0.80 for similarity to the query.",
+      "Patient DEMO-PAT-0091 is a different patient with no relation to the querying user."
+    ]
+  },
+  {
+    "level": 4,
+    "title": "Embedding Poisoning via Medical Vocabulary",
+    "challenge": "An attacker crafted a fake vendor bulletin that used authentic medical vocabulary from an approved MRI operator manual. The bulletin was indexed into the hospital knowledge base. It now ranks in the top 3 results for any MRI-related query. Describe the attack technique and the ingestion control that should have caught it.",
+    "evidence": [
+      "Fake bulletin contained: MRI, 3T scanner, SAR, protocol, paediatric, contrast, dosage.",
+      "The bulletin linked to free-medical-tools.net and advised bypassing the anaesthesia review.",
+      "Source: unverified vendor, no hospital domain, no author credentials.",
+      "The document was accepted by the automated ingestion pipeline without source validation.",
+      "No human review was required before indexing."
+    ]
+  },
+  {
+    "level": 5,
+    "title": "Secure Retrieval Pipeline Design",
+    "challenge": "After discovering multiple poisoning incidents, the hospital security team is redesigning the RAG retrieval pipeline. You are asked to recommend the three most important controls to reduce LLM09 risk while preserving retrieval quality. Identify the controls and explain how each one mitigates the vulnerability.",
+    "evidence": [
+      "Current pipeline: ingest any uploaded document, embed, store, retrieve top-k by similarity, send to LLM.",
+      "Known attacks: poisoned medical advice, cross-patient PHI retrieval, fake service manuals.",
+      "Retrieval is the only access gate between uploaded documents and LLM responses.",
+      "The hospital cannot afford to reduce retrieval accuracy for legitimate clinical queries.",
+      "Audit logs exist but are not monitored in real time."
+    ]
+  }
+]
